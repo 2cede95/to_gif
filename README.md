@@ -5,9 +5,20 @@ Uses yt_dlp and ffmpeg python wrappers to attempt to convert some arbitrary medi
 Install dependencies via:
 
 ```
-<pip executable> install ffmpeg-python yt_dlp
+pip install ffmpeg-python yt_dlp
 ```
 
-A standalone ffmpeg installation is required: see https://ffmpeg.org/ (ensure ffmpeg is in PATH)
+A standalone ffmpeg installation is also required: see https://ffmpeg.org/ (ensure ffmpeg is in PATH)
 
-**For cusomisation options see the help page `<python executable> to_gif.py --help` 
+##Usage
+### Convert a Youtube video to a gif:
+```
+python to_gif.py --link "https://www.youtube.com/watch?v=[youtube video ID]"
+```
+
+### Convert an .mp4 file to a gif and name the output file:
+```
+python to_gif.py --file "path/to/file" -o example.gif
+```
+
+**For cusomisation options see the help page `python to_gif.py --help` 
