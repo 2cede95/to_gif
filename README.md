@@ -8,6 +8,6 @@ Install dependencies via:
 pip install ffmpeg-python yt_dlp
 ```
 
-A standalone ffmpeg installation is required: see https://ffmpeg.org/
+A standalone ffmpeg installation is required: see https://ffmpeg.org/ (ensure ffmpeg is in PATH)
 
-**For cusomisation options see the `<python executable> to_gif.py --help` page.
+**For cusomisation options see the help page `<python executable> to_gif.py --help` 
