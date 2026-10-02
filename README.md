@@ -1,4 +1,4 @@
-## to_gif.py
+# **to_gif.py**
 
 Uses yt_dlp and ffmpeg python wrappers to attempt to convert some arbitrary media link/file into the .gif format. Output is saved to disk in the same directory as the script.
 
