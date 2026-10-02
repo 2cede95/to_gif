@@ -4,6 +4,7 @@ import ffmpeg
 from tempfile import NamedTemporaryFile
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from pathlib import Path
+from shutil import get_terminal_size
 
 parser = ArgumentParser(
     formatter_class=ArgumentDefaultsHelpFormatter,
@@ -22,6 +23,7 @@ parser.add_argument(
 filetype_parser = parser.add_mutually_exclusive_group()
 
 filetype_parser.add_argument(
+    '-l',
     "--link",
     type=str,
     default=None,
@@ -29,6 +31,7 @@ filetype_parser.add_argument(
 )
 
 filetype_parser.add_argument(
+    '-f',
     "--file",
     type=Path,
     default=None,
@@ -64,7 +67,16 @@ def process_to_gif(path: Path) -> bytes:
     return gif
 
 def write_gif_to_disk(gif: bytes, path: Path) -> None:
+
     path.write_bytes(gif)
+
+    terminal_width = get_terminal_size().columns
+    message = f"Success! \"{path}\" written to disk at \"{path.resolve()}\"."
+    print(terminal_width*"*")
+
+    print((terminal_width - len(message))//2 * ' ', end='')
+    print(message, end='')
+    print("\n" + terminal_width*"*", end='')
 
 def main():
 
