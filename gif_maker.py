@@ -104,18 +104,30 @@ def write_gif_to_disk(gif: bytes, path: Path) -> None:
     message = f"Success! \"{path}\" written to disk at \"{path.resolve()}\"."
     print_big_terminal_message(message)
 
+def check_output_file_path_validity(path: Path) -> Path:
+
+    if path.suffix == ".gif":
+        return path
+    else:
+        return path.with_suffix(".gif")
+
+
 def main():
 
     args = parser.parse_args()
+
+    opath = check_output_file_path_validity(args.output_path)
     
     if args.file is not None:
         gif = process_to_gif(args.file)
+
     elif args.link is not None:
         gif = download_media_and_process(args.link)
+        
     else:
         parser.print_help()
 
-    write_gif_to_disk(gif, args.output_path)
+    write_gif_to_disk(gif, opath)
 
     return 0
 
