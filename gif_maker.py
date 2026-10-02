@@ -1,10 +1,11 @@
-from yt_dlp import YoutubeDL
+from yt_dlp import YoutubeDL, utils
 import ffmpeg
 
 from tempfile import NamedTemporaryFile
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from pathlib import Path
 from shutil import get_terminal_size
+from sys import exit
 
 parser = ArgumentParser(
     formatter_class=ArgumentDefaultsHelpFormatter,
@@ -41,14 +42,22 @@ filetype_parser.add_argument(
 def download_media_and_process(url: str) -> bytes:
 
     with NamedTemporaryFile(suffix=".mp4") as f:
-
         opts = {
             "outtmpl": f.name,
-            "format": "bv[height<=720]/bv"
+            "format": "bv[height<=720]/bv",
         }
 
-    with YoutubeDL(opts) as ydl:
-        ydl.download([url])
+    try:
+        with YoutubeDL(opts) as ydl:
+            ydl.download([url])
+
+    except (utils.DownloadError, utils.DownloadCancelled):
+        message = f"Error occurred during download. See above logs for details. (Exit status 1)"
+
+        print('\n', end='') 
+        print_big_terminal_message(message, delim='!')
+
+        exit(1)
 
     gif = process_to_gif(Path(f.name))
 
@@ -66,17 +75,21 @@ def process_to_gif(path: Path) -> bytes:
 
     return gif
 
+def print_big_terminal_message(message: str, delim: str = '*'):
+        
+    terminal_width = get_terminal_size().columns
+    print(terminal_width*delim)
+
+    print((terminal_width - len(message))//2 * ' ', end='')
+    print(message, end='')
+    print("\n" + terminal_width*delim, end='')
+
 def write_gif_to_disk(gif: bytes, path: Path) -> None:
 
     path.write_bytes(gif)
 
-    terminal_width = get_terminal_size().columns
     message = f"Success! \"{path}\" written to disk at \"{path.resolve()}\"."
-    print(terminal_width*"*")
-
-    print((terminal_width - len(message))//2 * ' ', end='')
-    print(message, end='')
-    print("\n" + terminal_width*"*", end='')
+    print_big_terminal_message(message)
 
 def main():
 
