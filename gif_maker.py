@@ -65,24 +65,37 @@ def download_media_and_process(url: str) -> bytes:
     
 def process_to_gif(path: Path) -> bytes:
 
-    gif, _ = (
-            ffmpeg.input(path).output(
-                "pipe:",
-                format="gif",
-                vf="fps=15,scale=720:-1:flags=lanczos",
-            ).run(capture_stdout=True, capture_stderr=True)
-        )
+    try:
+        gif, _ = (
+                ffmpeg.input(path).output(
+                    "pipe:",
+                    format="gif",
+                    vf="fps=15,scale=720:-1:flags=lanczos",
+                ).run(capture_stdout=True, capture_stderr=True)
+            )
+    except ffmpeg.Error as e:
+
+            message = f"{e.stderr.decode("utf-8", errors="replace")}"
+            print_big_terminal_message(message, delim='!', close = False)
+
+            message = f"Error in FFmpeg processing. See above logs for details. (Exit status 1)"
+            print_big_terminal_message(message, delim='!', open = False)
+
+            exit()
 
     return gif
 
-def print_big_terminal_message(message: str, delim: str = '*'):
+def print_big_terminal_message(message: str, delim: str = '*', open: bool = True, close: bool = True):
         
     terminal_width = get_terminal_size().columns
-    print(terminal_width*delim)
+    
+    if open: 
+        print(terminal_width*delim + '\n')
 
-    print((terminal_width - len(message))//2 * ' ', end='')
-    print(message, end='')
-    print("\n" + terminal_width*delim, end='')
+    print((terminal_width - len(message))//2 * ' ' + message)
+    
+    if close: 
+        print(terminal_width*delim, end='')
 
 def write_gif_to_disk(gif: bytes, path: Path) -> None:
 
