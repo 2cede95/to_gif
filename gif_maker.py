@@ -15,7 +15,7 @@ parser.add_argument(
     '-o',
     "--output_path",
     type=Path,
-    default=Path("."),
+    default=Path(".") / "out.gif",
     help="Where to store the output gif.",
 )
 
@@ -77,7 +77,7 @@ def main():
     else:
         parser.print_help()
 
-    write_gif_to_disk(gif, args.output_path / "out.gif")
+    write_gif_to_disk(gif, args.output_path)
 
     return 0
 
