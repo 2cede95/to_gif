@@ -5,7 +5,7 @@ Uses yt_dlp and ffmpeg python wrappers to attempt to convert some arbitrary medi
 Install dependencies via:
 
 ```Python
-pip install ffmpeg-python yt_dlp
+<pip executable> install ffmpeg-python yt_dlp
 ```
 
 A standalone ffmpeg installation is required: see https://ffmpeg.org/ (ensure ffmpeg is in PATH)
