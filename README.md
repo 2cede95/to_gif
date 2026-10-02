@@ -6,6 +6,7 @@ Install dependencies via:
 
 ```Python
 pip install ffmpeg-python yt_dlp
+```
 
 A standalone ffmpeg installation is required: see https://ffmpeg.org/
 
