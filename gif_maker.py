@@ -81,7 +81,7 @@ def process_to_gif(path: Path) -> bytes:
             message = f"Error in FFmpeg processing. See above logs for details. (Exit status 1)"
             print_big_terminal_message(message, delim='!', open = False)
 
-            exit()
+            exit(1)
 
     return gif
 
