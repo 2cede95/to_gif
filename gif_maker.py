@@ -8,7 +8,7 @@ from pathlib import Path
 parser = ArgumentParser(
     formatter_class=ArgumentDefaultsHelpFormatter,
     prog="to_gif.py",
-    description="Use yt_dlp and ffmpeg to easily convert wide range of media to .gif format.",
+    description="Use yt_dlp and ffmpeg to attempt to convert arbitrary media to .gif format.",
 )
 
 parser.add_argument(
