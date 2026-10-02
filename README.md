@@ -18,7 +18,7 @@ python to_gif.py --link "https://www.youtube.com/watch?v=[youtube video ID]"
 
 ### Convert an .mp4 file to a gif and name the output file:
 ```
-python to_gif.py --file "path/to/video.mp4" -o example.gif
+python to_gif.py --file "path/to/video.mp4" -o example
 ```
 
-**For cusomisation options see the help page `python to_gif.py --help` 
+**For cusomization options see the help page `python to_gif.py --help` 
