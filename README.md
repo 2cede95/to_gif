@@ -10,7 +10,7 @@ pip install ffmpeg-python yt_dlp
 
 A standalone ffmpeg installation is also required: see https://ffmpeg.org/ (ensure ffmpeg is in PATH)
 
-##Usage
+## Usage
 ### Convert a Youtube video to a gif:
 ```
 python to_gif.py --link "https://www.youtube.com/watch?v=[youtube video ID]"
