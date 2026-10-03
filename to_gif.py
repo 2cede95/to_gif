@@ -98,7 +98,7 @@ def download_media_and_process(url: str, fps: int, resolution_pix: int) -> bytes
     with NamedTemporaryFile(suffix=".mp4") as f:
         opts = {
             "outtmpl": f.name,
-            "format": "bv[height<=720]/bv",
+            "format": f"bv[height<={resolution_pix}]/bv",
             "logger": LOGGER,
         }
 
