@@ -76,7 +76,7 @@ filetype_parser.add_argument(
 )
 
 
-def download_media_and_process(url: str) -> bytes:
+def download_media_and_process(url: str, fps: int, resolution_pix: int) -> bytes:
 
     with NamedTemporaryFile(suffix=".mp4") as f:
         opts = {
@@ -98,7 +98,7 @@ def download_media_and_process(url: str) -> bytes:
 
         exit(1)
 
-    gif = process_to_gif(Path(f.name))
+    gif = process_to_gif(Path(f.name), fps, resolution_pix)
 
     return gif
 
@@ -186,7 +186,7 @@ def main():
         gif = process_to_gif(args.file, args.fps, args.resolution)
 
     elif args.link is not None:
-        gif = download_media_and_process(args.link)
+        gif = download_media_and_process(args.link, args.fps, args.resolution)
 
     else:
         parser.print_help()
