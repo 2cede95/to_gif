@@ -9,15 +9,14 @@ import logging
 
 
 # Defaults
-FILE_INDEX_LIMIT = 1000 # used in unique_output_path
 DEFAULT_FILE_NAME = "out.gif"
+DEFAULT_LOG_PATH = Path(__file__).with_suffix(".log")
+DEFAULT_GIF_RESOLUTION_PX = 480
+DEFAULT_GIF_FPS = 15
+
 PROGRAM_NAME = "to_gif.py"
 PROGRAM_DESCRIPTION= "Use yt_dlp and ffmpeg to attempt to convert arbitrary media to .gif format."
-DEFAULT_LOG_PATH = Path(__file__).with_suffix(".log")
-
-# Higher numbers take up more disk space
-GIF_RESOLUTION_PX = 480
-GIF_FPS = 15
+FILE_INDEX_LIMIT = 1000 # used in unique_output_path
 
 # Setup log file
 LOGGER = logging.getLogger("Default")
@@ -41,6 +40,21 @@ parser.add_argument(
     type=Path,
     default=Path(".") / DEFAULT_FILE_NAME,
     help="Where to store the output gif.",
+)
+
+parser.add_argument(
+    "--fps",
+    type=int,
+    default=DEFAULT_GIF_FPS,
+    help="FPS of output gif."
+)
+
+parser.add_argument(
+    '-res',
+    "--resolution",
+    type=int,
+    default=DEFAULT_GIF_RESOLUTION_PX,
+    help="resolution of output gif."
 )
 
 filetype_parser = parser.add_mutually_exclusive_group()
@@ -89,14 +103,14 @@ def download_media_and_process(url: str) -> bytes:
     return gif
 
     
-def process_to_gif(path: Path) -> bytes:
+def process_to_gif(path: Path, fps: int, resolution_pix: int) -> bytes:
 
     try:
         gif, _ = (
                 ffmpeg.input(path).output(
                     "pipe:",
                     format="gif",
-                    vf=f"fps={GIF_FPS},scale={GIF_RESOLUTION_PX}:-1:flags=lanczos",
+                    vf=f"fps={fps},scale={resolution_pix}:-1:flags=lanczos",
                 ).run(capture_stdout=True, capture_stderr=True)
             )
     except ffmpeg.Error as e:
@@ -169,7 +183,7 @@ def main():
     )
     
     if args.file is not None:
-        gif = process_to_gif(args.file)
+        gif = process_to_gif(args.file, args.fps, args.resolution)
 
     elif args.link is not None:
         gif = download_media_and_process(args.link)
