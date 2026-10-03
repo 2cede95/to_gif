@@ -29,7 +29,7 @@ python to_gif.py --file "path/to/video.mp4" -o example
 2. Create a key at the path 'HKEY_CLASSES_ROOT\*\shell\to_gif'.
 3. Go into the key.
 4. Double click on (Default).
-5. Set the value to 'Convert to gif'
+5. Set the value to 'Convert to gif'.
 
 ### Add the python script shell command
 1. Create a new key under to_gif called "command" i.e. (HKEY_CLASSES_ROOT\*\shell\to_gif\command).
