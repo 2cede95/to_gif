@@ -1,0 +1,1 @@
+@python "%~dp0to_gif.py" %*
