@@ -1,24 +1,38 @@
-from yt_dlp import YoutubeDL, utils
+from yt_dlp import YoutubeDL
 import ffmpeg
 
 from tempfile import NamedTemporaryFile
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from pathlib import Path
 from shutil import get_terminal_size
-from sys import exit
+import logging
 
+
+# Defaults
 FILE_INDEX_LIMIT = 1000 # used in unique_output_path
 DEFAULT_FILE_NAME = "out.gif"
+PROGRAM_NAME = "to_gif.py"
+PROGRAM_DESCRIPTION= "Use yt_dlp and ffmpeg to attempt to convert arbitrary media to .gif format."
+DEFAULT_LOG_PATH = Path(__file__).with_suffix(".log")
 
 # Higher numbers take up more disk space
 GIF_RESOLUTION_PX = 480
 GIF_FPS = 15
 
+# Setup log file
+LOGGER = logging.getLogger("Default")
+LOGGER.setLevel(logging.INFO)
+
+HANDLER = logging.FileHandler(DEFAULT_LOG_PATH, mode='w')
+HANDLER.setFormatter(logging.Formatter("%(message)s"))
+
+LOGGER.addHandler(HANDLER)
+
 
 parser = ArgumentParser(
     formatter_class=ArgumentDefaultsHelpFormatter,
-    prog="to_gif.py",
-    description="Use yt_dlp and ffmpeg to attempt to convert arbitrary media to .gif format.",
+    prog=PROGRAM_NAME,
+    description=PROGRAM_DESCRIPTION,
 )
 
 parser.add_argument(
@@ -54,17 +68,19 @@ def download_media_and_process(url: str) -> bytes:
         opts = {
             "outtmpl": f.name,
             "format": "bv[height<=720]/bv",
+            "logger": LOGGER,
         }
 
     try:
         with YoutubeDL(opts) as ydl:
             ydl.download([url])
 
-    except (utils.DownloadError, utils.DownloadCancelled):
+    except:
         message = f"Error occurred during download. See above logs for details. (Exit status 1)"
 
         print('\n', end='') 
         print_big_terminal_message(message, delim='!')
+        LOGGER.error(message)
 
         exit(1)
 
@@ -85,8 +101,10 @@ def process_to_gif(path: Path) -> bytes:
             )
     except ffmpeg.Error as e:
 
+            # stdout logging
             message = f"{e.stderr.decode("utf-8", errors="replace")}"
             print_big_terminal_message(message, delim='!', close = False)
+            LOGGER.error(message)
 
             message = f"Error in FFmpeg processing. See above logs for details. (Exit status 1)"
             print_big_terminal_message(message, delim='!', open = False)
@@ -115,6 +133,7 @@ def write_gif_to_disk(gif: bytes, path: Path) -> None:
 
     message = f"Success! \"{path}\" written to disk at \"{path.resolve()}\"."
     print_big_terminal_message(message)
+    LOGGER.info(message)
 
 
 def check_output_file_path_validity(path: Path) -> Path:
