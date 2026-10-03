@@ -28,12 +28,12 @@ python to_gif.py --file "path/to/video.mp4" -o example
 1. Open regedit and navigate to 'HKEY_CLASSES_ROOT\*\shell'.
 2. Create a key at the path 'HKEY_CLASSES_ROOT\*\shell\to_gif'.
 3. Go into the key.
-4. Double click on (Default)
+4. Double click on (Default).
 5. Set the value to 'Convert to gif'
 
 ### Add the python script shell command
-1. Create a new key under to_gif called "command" i.e. (HKEY_CLASSES_ROOT\*\shell\to_gif\command)
-2. Double click on (Default)
-3. Set the value to '"C:\Path\to\python.exe" "C:\Path\to\to_gif.py" --file "%1"'
+1. Create a new key under to_gif called "command" i.e. (HKEY_CLASSES_ROOT\*\shell\to_gif\command).
+2. Double click on (Default).
+3. Set the value to '"C:\Path\to\python.exe" "C:\Path\to\to_gif.py" --file "%1"'.
 
 ![Windows context menu item](./assets/regedit_example.gif)
