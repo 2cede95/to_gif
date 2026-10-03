@@ -90,7 +90,7 @@ def download_media_and_process(url: str) -> bytes:
             ydl.download([url])
 
     except:
-        message = f"Error occurred during download. See above logs for details. (Exit status 1)"
+        message = f"Error occurred during download. See logs at {DEFAULT_LOG_PATH.resolve()}. (Exit status 1)"
 
         print('\n', end='') 
         print_big_terminal_message(message, delim='!')
@@ -120,7 +120,7 @@ def process_to_gif(path: Path, fps: int, resolution_pix: int) -> bytes:
             print_big_terminal_message(message, delim='!', close = False)
             LOGGER.error(message)
 
-            message = f"Error in FFmpeg processing. See above logs for details. (Exit status 1)"
+            message = f"Error in FFmpeg processing. See logs at {DEFAULT_LOG_PATH.resolve()}. (Exit status 1)"
             print_big_terminal_message(message, delim='!', open = False)
 
             exit(1)
