@@ -37,3 +37,6 @@ python to_gif.py --file "path/to/video.mp4" -o example
 3. Set the value to '"C:\Path\to\python.exe" "C:\Path\to\to_gif.py" --file "%1"'.
 
 ![Windows context menu item](./assets/regedit_example.gif)
+
+## Troubleshooting
+A log file is created in the directory that the script is placed which contains information about the last time the script was run.
