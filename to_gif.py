@@ -10,6 +10,7 @@ import logging
 
 # Defaults
 DEFAULT_FILE_NAME = "out.gif"
+DEFAULT_OUTPUT_DIR = Path(".")
 DEFAULT_LOG_PATH = Path(__file__).with_suffix(".log")
 DEFAULT_GIF_RESOLUTION_PX = 480
 DEFAULT_GIF_FPS = 15
@@ -36,10 +37,26 @@ parser = ArgumentParser(
 
 parser.add_argument(
     '-o',
+    "--output_file_name",
+    type=Path,
+    default=DEFAULT_FILE_NAME,
+    help=f"Specify file name for output inside the default output directory ({DEFAULT_OUTPUT_DIR})",
+)
+
+parser.add_argument(
+    '-d',
+    "--output_dir",
+    type=Path,
+    default=DEFAULT_OUTPUT_DIR,
+    help="Specify the output directory"
+)
+
+parser.add_argument(
+    '-op',
     "--output_path",
     type=Path,
-    default=Path(".") / DEFAULT_FILE_NAME,
-    help="Where to store the output gif.",
+    default=None,
+    help="Specify the output path in full. If this flag is given then --output_dir and --output_file_name are ignored."
 )
 
 parser.add_argument(
@@ -88,14 +105,11 @@ def download_media_and_process(url: str, fps: int, resolution_pix: int) -> bytes
     try:
         with YoutubeDL(opts) as ydl:
             ydl.download([url])
-
     except:
         message = f"Error occurred during download. See logs at {DEFAULT_LOG_PATH.resolve()}. (Exit status 1)"
-
         print('\n', end='') 
         print_big_terminal_message(message, delim='!')
         LOGGER.error(message)
-
         exit(1)
 
     gif = process_to_gif(Path(f.name), fps, resolution_pix)
@@ -169,7 +183,6 @@ def unique_output_path(path: Path) -> Path:
         if not buffer_path.exists():
             return buffer_path
         
-        i+=1
 
     return path.with_stem(f"{path.stem} ({FILE_INDEX_LIMIT})")  
 
@@ -178,9 +191,16 @@ def main():
 
     args = parser.parse_args()
 
-    output_path = unique_output_path(
-        check_output_file_path_validity(args.output_path)
-    )
+    if args.output_path is None:
+        output_path = unique_output_path(
+            check_output_file_path_validity(args.output_dir/args.output_file_name)
+        )
+    else:
+        if not args.output_path.is_dir():
+            output_path = check_output_file_path_validity(args.output_path)
+
+        else:
+            output_path = check_output_file_path_validity(args.output_path/DEFAULT_FILE_NAME)
     
     if args.file is not None:
         gif = process_to_gif(args.file, args.fps, args.resolution)
